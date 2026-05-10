@@ -204,9 +204,11 @@ Les captures ci‑dessous illustrent le bon fonctionnement de l’API REST docum
 ---
 ##  – Execution des interfaces web et mobile
 
-![interface mobile departement](screenshots_partie2/execution_crud_departement.png)
+les interfaces mobiles 
 
-![interface mobile etudiant](screenshots_partie2/execution_crud_etudiant.png)
+![interface mobile departement](screenshots_partie2/execution_crud_departement.png)    ![interface mobile etudiant](screenshots_partie2/execution_crud_etudiant.png)
+
+les interfaces web
 
 ![interface web departement](screenshots_partie2/execution_crud_departement_web.png)
 
