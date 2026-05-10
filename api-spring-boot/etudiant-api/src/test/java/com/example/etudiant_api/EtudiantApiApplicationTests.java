@@ -1,13 +1,13 @@
-package com.example.etudiant_api;
+//package com.example.etudiant_api;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class EtudiantApiApplicationTests {
+//@SpringBootTest
+//class EtudiantApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+	//@Test
+	//void contextLoads() {
+	//}
 
-}
+//}

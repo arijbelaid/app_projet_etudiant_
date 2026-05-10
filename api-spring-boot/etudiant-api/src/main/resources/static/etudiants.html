@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gestion des Étudiants</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #4f46e5;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            transition: background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .back-link:hover { background: #eef2ff; }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e2a5e, #2d3a6e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            border-left: 5px solid #4f46e5;
+            padding-left: 1rem;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .card-body { padding: 1.8rem; }
+        .form-grid {
+            background: #fafcff;
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #eef2ff;
+        }
+        .form-title {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            border-left: 3px solid #4f46e5;
+            padding-left: 0.8rem;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-group { flex: 1; min-width: 160px; }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: #4b5563;
+            margin-bottom: 0.3rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            background: white;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.2);
+        }
+        .btn-group { display: flex; gap: 0.8rem; margin-top: 1rem; flex-wrap: wrap; }
+        button {
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-primary { background: #4f46e5; color: white; box-shadow: 0 2px 6px rgba(79,70,229,0.3); }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-secondary { background: #f1f5f9; color: #1e293b; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .action-btn {
+            background: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+        .action-btn.edit { color: #4f46e5; }
+        .action-btn.edit:hover { background: #eef2ff; }
+        .action-btn.delete { color: #e11d48; }
+        .action-btn.delete:hover { background: #ffe4e6; }
+        .table-wrapper { overflow-x: auto; border-radius: 18px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th {
+            text-align: left;
+            padding: 0.9rem 0.8rem;
+            background: #f8fafc;
+            color: #334155;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        td { padding: 0.9rem 0.8rem; border-bottom: 1px solid #edf2f7; }
+        .empty-row { text-align: center; color: #94a3b8; padding: 2rem; }
+    </style>
+</head>
+<body>
+<a href="index.html" class="back-link">← Retour à l'accueil</a>
+<h1 class="page-title">👩‍🎓 Gestion des Étudiants</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="form-grid">
+            <div class="form-title">➕ Ajouter / Modifier un étudiant</div>
+            <form id="etudiantForm">
+                <input type="hidden" id="etudiantId">
+                <div class="form-row">
+                    <div class="form-group"><label>CIN</label><input type="text" id="cin" placeholder="ex: A123456" required></div>
+                    <div class="form-group"><label>Nom complet</label><input type="text" id="nom" placeholder="Dupont Alice" required></div>
+                    <div class="form-group"><label>Date naissance</label><input type="date" id="dateNaissance" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="prenom.nom@exemple.com" required></div>
+                    <div class="form-group"><label>Année inscription</label><input type="number" id="annee" placeholder="2023" required></div>
+                    <div class="form-group"><label>Département</label><select id="departementId"></select></div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" id="saveEtudiantBtn" class="btn-primary">💾 Ajouter</button>
+                    <button type="button" id="cancelEtudiantBtn" class="btn-secondary">❌ Annuler</button>
+                </div>
+            </form>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>ID</th><th>CIN</th><th>Nom</th><th>Naissance</th><th>Email</th><th>Année</th><th>Département</th><th>Actions</th></tr></thead>
+                <tbody id="etudiantsBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = window.location.origin;
+
+    async function loadDepartementsSelect() {
+        const res = await fetch(`${API_BASE}/api/departements`);
+        const depts = await res.json();
+        const select = document.getElementById('departementId');
+        select.innerHTML = '<option value="">-- Choisir --</option>';
+        for (const d of depts) {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.nom;
+            select.appendChild(opt);
+        }
+    }
+
+    async function loadEtudiants() {
+        const res = await fetch(`${API_BASE}/api/etudiants`);
+        const etudiants = await res.json();
+        const tbody = document.getElementById('etudiantsBody');
+        tbody.innerHTML = '';
+        if (etudiants.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-row">📭 Aucun étudiant</td></tr>';
+            return;
+        }
+        for (const e of etudiants) {
+            const row = tbody.insertRow();
+            row.insertCell().textContent = e.id;
+            row.insertCell().textContent = e.cin;
+            row.insertCell().textContent = e.nom;
+            row.insertCell().textContent = e.dateNaissance?.split('T')[0] || e.dateNaissance;
+            row.insertCell().textContent = e.email;
+            row.insertCell().textContent = e.anneePremiereInscription;
+            row.insertCell().textContent = e.departementNom || (e.departementId ? `Dépt. ${e.departementId}` : '-');
+            const actions = row.insertCell();
+            actions.className = "action-buttons";
+            const editBtn = document.createElement('button');
+            editBtn.innerHTML = '✏️ Modifier';
+            editBtn.className = 'action-btn edit';
+            editBtn.onclick = () => fillEtudiantForm(e);
+            const delBtn = document.createElement('button');
+            delBtn.innerHTML = '🗑️ Supprimer';
+            delBtn.className = 'action-btn delete';
+            delBtn.onclick = () => deleteEtudiant(e.id);
+            actions.appendChild(editBtn);
+            actions.appendChild(delBtn);
+        }
+    }
+
+    function fillEtudiantForm(e) {
+        document.getElementById('etudiantId').value = e.id;
+        document.getElementById('cin').value = e.cin;
+        document.getElementById('nom').value = e.nom;
+        document.getElementById('dateNaissance').value = e.dateNaissance;
+        document.getElementById('email').value = e.email;
+        document.getElementById('annee').value = e.anneePremiereInscription;
+        document.getElementById('departementId').value = e.departementId;
+        document.getElementById('saveEtudiantBtn').innerHTML = '💾 Modifier';
+    }
+
+    async function deleteEtudiant(id) {
+        if (confirm('⚠️ Supprimer définitivement cet étudiant ?')) {
+            await fetch(`${API_BASE}/api/etudiants/${id}`, { method: 'DELETE' });
+            loadEtudiants();
+        }
+    }
+
+    document.getElementById('etudiantForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('etudiantId').value;
+        const payload = {
+            cin: document.getElementById('cin').value,
+            nom: document.getElementById('nom').value,
+            dateNaissance: document.getElementById('dateNaissance').value,
+            email: document.getElementById('email').value,
+            anneePremiereInscription: parseInt(document.getElementById('annee').value),
+            departementId: parseInt(document.getElementById('departementId').value)
+        };
+        const url = id ? `${API_BASE}/api/etudiants/${id}` : `${API_BASE}/api/etudiants`;
+        const method = id ? 'PUT' : 'POST';
+        await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        document.getElementById('etudiantForm').reset();
+        document.getElementById('etudiantId').value = '';
+        document.getElementById('saveEtudiantBtn').innerHTML = '💾 Ajouter';
+        loadEtudiants();
+    });
+    document.getElementById('cancelEtudiantBtn').addEventListener('click', () => {
+        document.getElementById('etudiantForm').reset();
+        document.getElementById('etudiantId').value = '';
+        document.getElementById('saveEtudiantBtn').innerHTML = '💾 Ajouter';
+    });
+
+    loadDepartementsSelect();
+    loadEtudiants();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etudiant-api
+  labels:
+    app: etudiant-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etudiant-api
+  template:
+    metadata:
+      labels:
+        app: etudiant-api
+    spec:
+      containers:
+        - name: api
+          image: arijbelaid/etudiant-service:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/etudiantdb
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres

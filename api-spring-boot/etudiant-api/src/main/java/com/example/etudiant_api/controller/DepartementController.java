@@ -1,40 +1,39 @@
 package com.example.etudiant_api.controller;
 
-import com.example.etudiant_api.dto.EtudiantDTO;
-import com.example.etudiant_api.service.EtudiantService;
+import com.example.etudiant_api.dto.DepartementDTO;
+import com.example.etudiant_api.service.DepartementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/etudiants")
+@RequestMapping("/api/departements")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-public class EtudiantController {
+public class DepartementController {
 
-    private final EtudiantService service;
+    private final DepartementService service;
 
     @GetMapping
-    public List<EtudiantDTO> getAllEtudiants(
-            @RequestParam(required = false) Integer annee) {
-        if (annee != null) {
-            return service.getEtudiantsByAnnee(annee);
-        }
-        return service.getAllEtudiants();
+    public List<DepartementDTO> getAll() {
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public EtudiantDTO getEtudiantById(@PathVariable Long id) {
-        return service.getEtudiantById(id);
+    public ResponseEntity<DepartementDTO> getById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(service.getById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<EtudiantDTO> create(@RequestBody EtudiantDTO dto) {
-        EtudiantDTO created = service.createEtudiant(dto);
+    public ResponseEntity<DepartementDTO> create(@RequestBody DepartementDTO dto) {
+        DepartementDTO created = service.create(dto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -44,9 +43,9 @@ public class EtudiantController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EtudiantDTO> update(@PathVariable Long id, @RequestBody EtudiantDTO dto) {
+    public ResponseEntity<DepartementDTO> update(@PathVariable Long id, @RequestBody DepartementDTO dto) {
         try {
-            EtudiantDTO updated = service.updateEtudiant(id, dto);
+            DepartementDTO updated = service.update(id, dto);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -56,9 +55,10 @@ public class EtudiantController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            service.deleteEtudiant(id);
+            service.delete(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-    }}
+    }
+}
