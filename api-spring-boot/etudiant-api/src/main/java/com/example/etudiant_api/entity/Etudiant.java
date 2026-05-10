@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Etudiant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,4 +23,19 @@ public class Etudiant {
     private String nom;
 
     private LocalDate dateNaissance;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private int anneePremiereInscription;
+
+    @ManyToOne
+    @JoinColumn(name = "departement_id")
+    private Departement departement;
+
+    // Méthode age()
+    public int age() {
+        if (dateNaissance == null) return 0;
+        return java.time.Period.between(dateNaissance, LocalDate.now()).getYears();
+    }
 }
