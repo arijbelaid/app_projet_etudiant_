@@ -43,9 +43,40 @@ services:
       - app-network
     restart: unless-stopped
 
+  grading-db:
+    image: postgres:15
+    container_name: grading_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gradingdb
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    volumes:
+      - grading_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  grading-service:
+    build: ./grading-service
+    container_name: grading_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - grading-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://grading-db:5432/gradingdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   postgres_data:
+  grading_data:
